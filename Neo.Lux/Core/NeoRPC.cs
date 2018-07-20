@@ -12,6 +12,7 @@ namespace Neo.Lux.Core
     {
         public readonly string neoscanUrl;
         public readonly int port;
+        public string[] urls;
 
         public NeoRPC(int port, string neoscanURL)
         {
@@ -21,7 +22,22 @@ namespace Neo.Lux.Core
 
         public static NeoRPC ForMainNet()
         {
-            return new RemoteRPCNode(10332, "http://neoscan.io");
+            NeoRPC rpc = new RemoteRPCNode(10332, "http://neoscan.io");
+            rpc.InitProdEndPoints();
+            return rpc;
+        }
+
+        public void InitProdEndPoints()
+        {
+            urls = new string[7];
+            urls[0] = $"http://seed3.aphelion-neo.com:10332";
+            urls[1] = $"http://seed1.aphelion-neo.com:10332";
+            urls[2] = $"http://seed2.aphelion-neo.com:10332";
+            urls[3] = $"http://seed2.aphelion-neo.com:10332";
+            urls[4] = $"http://seed1.travala.com:10332";
+            urls[5] = $"http://seed1.travala.com:10332";
+            urls[6] = $"http://seed2.neo.org:10332";
+
         }
 
         public static NeoRPC ForTestNet()
@@ -263,6 +279,15 @@ namespace Neo.Lux.Core
 
         protected override string GetRPCEndpoint()
         {
+            if (urls != null)
+            {
+                if (rpcIndex > urls.Length - 1)
+                    rpcIndex = 0;
+                var prodUrl = urls[rpcIndex];
+                rpcIndex++;
+                return prodUrl;
+            }
+
             if (rpcIndex == 0)
             {
                 rpcIndex = 1 + (Environment.TickCount % 5);
