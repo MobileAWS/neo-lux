@@ -10,6 +10,8 @@ namespace Neo.Lux.Core
     public abstract class NeoRPC : NeoAPI
     {
         public readonly string neoscanUrl;
+        
+        public Boolean UseRetries { set; get; } = true;
 
         public NeoRPC(string neoscanURL)
         {
@@ -62,6 +64,7 @@ namespace Neo.Lux.Core
             LogData(jsonRpcData);
 
             int retryCount = 0;
+            int maxRetries = UseRetries ? 10 : 1;
             do
             {
                 if (rpcEndpoint == null)
@@ -91,7 +94,7 @@ namespace Neo.Lux.Core
                     retryCount++;
                 }
 
-            } while (retryCount < 10);
+            } while (retryCount < maxRetries);
 
             return null;
         }

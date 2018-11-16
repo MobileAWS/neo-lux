@@ -17,3 +17,5 @@ Demos/*/obj/
 Demos/NeoUnity/Library/
 Demos/NeoUnity/Temp/
 Demos/NeoUnity/UnityPackageManager/
+
+.idea
